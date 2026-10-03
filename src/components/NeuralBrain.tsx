@@ -15,6 +15,9 @@ type Pulse = { a: number; b: number; t: number; speed: number; hops: number; bur
 
 const BASE_PULSES = 46;
 const MAX_PULSES = 260;
+// Burst signals may only use the capacity left over after the ambient ones,
+// so rapid clicking can never starve the ambient top-up below.
+const MAX_BURST = MAX_PULSES - BASE_PULSES;
 
 function mulberry32(seed: number) {
   return () => {
@@ -201,9 +204,10 @@ function Brain({ nodeColor, lineColor, accent, animate, burstRef }: BrainProps) 
   const pulses = useRef<Pulse[]>([]);
   const rand = useMemo(() => mulberry32(7), []);
 
+  /** Adds a signal starting at `from`; returns false if it couldn't. */
   const spawn = (from: number, burst: boolean) => {
     const nbrs = graph.adj[from];
-    if (!nbrs.length || pulses.current.length >= MAX_PULSES) return;
+    if (!nbrs.length || pulses.current.length >= MAX_PULSES) return false;
     pulses.current.push({
       a: from,
       b: nbrs[Math.floor(rand() * nbrs.length)],
@@ -212,6 +216,7 @@ function Brain({ nodeColor, lineColor, accent, animate, burstRef }: BrainProps) 
       hops: burst ? 4 + Math.floor(rand() * 6) : 6 + Math.floor(rand() * 14),
       burst,
     });
+    return true;
   };
 
   useFrame((state, dt) => {
@@ -229,12 +234,17 @@ function Brain({ nodeColor, lineColor, accent, animate, burstRef }: BrainProps) 
       burstRef.current = 0;
       const seed = Math.floor(rand() * graph.count);
       const region = [seed, ...graph.adj[seed], ...graph.adj[seed].flatMap((n) => graph.adj[n])];
-      for (let i = 0; i < 70; i++) spawn(region[i % region.length], true);
+      const bursting = pulses.current.reduce((n, p) => n + (p.burst ? 1 : 0), 0);
+      const room = Math.min(70, MAX_BURST - bursting);
+      for (let i = 0; i < room; i++) spawn(region[i % region.length], true);
       energy[seed] = 1;
     }
 
-    while (pulses.current.filter((p) => !p.burst).length < BASE_PULSES) {
-      spawn(Math.floor(rand() * graph.count), false);
+    // Top up ambient signals. Bounded: an unbounded `while` here froze the
+    // page when spawn() kept failing (pool full / isolated node).
+    let ambient = pulses.current.reduce((n, p) => n + (p.burst ? 0 : 1), 0);
+    for (let tries = 0; ambient < BASE_PULSES && tries < BASE_PULSES * 4; tries++) {
+      if (spawn(Math.floor(rand() * graph.count), false)) ambient++;
     }
 
     const pos = graph.positions;
