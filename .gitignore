@@ -1,0 +1,8 @@
+node_modules
+dist
+
+# Personal source material — keep out of the public repo
+Profile.pdf
+Sbilalahmad_GitHub_Profile.md
+Stitch_Projects.md
+Color Hunt Palette *.png
