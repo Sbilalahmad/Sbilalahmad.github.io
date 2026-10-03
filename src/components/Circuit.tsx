@@ -96,6 +96,9 @@ export default function Circuit({
   const ref = useRef<HTMLCanvasElement>(null);
   const reduced = useReducedMotion();
   const c = useCssVars(["--border", "--accent", "--bg"] as const);
+  // Colours live in a ref so a theme change repaints without rebuilding the board
+  const colors = useRef(c);
+  const repaint = useRef<() => void>(() => {});
 
   useEffect(() => {
     const canvas = ref.current!;
@@ -111,7 +114,7 @@ export default function Circuit({
     const drawStatic = () => {
       lctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       lctx.clearRect(0, 0, w, h);
-      lctx.strokeStyle = c["--border"];
+      lctx.strokeStyle = colors.current["--border"];
       lctx.lineWidth = 1.2;
       lctx.lineJoin = "round";
       for (const t of traces) {
@@ -120,7 +123,7 @@ export default function Circuit({
         lctx.stroke();
       }
       // Solder pads at both ends
-      lctx.fillStyle = c["--bg"];
+      lctx.fillStyle = colors.current["--bg"];
       for (const t of traces) {
         for (const i of [0, t.pts.length - 2]) {
           lctx.beginPath();
@@ -167,7 +170,7 @@ export default function Circuit({
       ctx.drawImage(layer, 0, 0, w, h);
 
       // Cursor proximity: light up nearby trace segments
-      ctx.strokeStyle = c["--accent"];
+      ctx.strokeStyle = colors.current["--accent"];
       ctx.lineWidth = 1.4;
       for (const t of traces)
         for (const s of t.segs) {
@@ -185,7 +188,7 @@ export default function Circuit({
         while (live.length < packets) spawn();
         ctx.globalAlpha = 1;
         ctx.lineWidth = 2;
-        ctx.fillStyle = c["--accent"];
+        ctx.fillStyle = colors.current["--accent"];
         live = live.filter((p) => {
           p.d += p.speed * dt * p.dir;
           if (p.d < 0 || p.d > p.t.len) return false;
@@ -205,6 +208,12 @@ export default function Circuit({
       }
       ctx.globalAlpha = 1;
       if (!reduced && visible) raf = requestAnimationFrame(frame);
+    };
+
+    // When the rAF loop is running it picks up changes on the next frame;
+    // calling frame() then would start a second, parallel loop.
+    const redrawIfIdle = () => {
+      if (reduced || !visible) frame(performance.now());
     };
 
     const onMove = (e: PointerEvent) => {
@@ -233,9 +242,13 @@ export default function Circuit({
       if (Math.abs(canvas.clientWidth - lastW) < 2 && Math.abs(canvas.clientHeight - h) < 80) return;
       lastW = canvas.clientWidth;
       resize();
-      frame(performance.now());
+      redrawIfIdle();
     });
     ro.observe(canvas);
+    repaint.current = () => {
+      drawStatic();
+      redrawIfIdle();
+    };
     window.addEventListener("pointermove", onMove, { passive: true });
     document.addEventListener("pointerleave", onLeave);
     return () => {
@@ -245,7 +258,12 @@ export default function Circuit({
       window.removeEventListener("pointermove", onMove);
       document.removeEventListener("pointerleave", onLeave);
     };
-  }, [c, grid, packets, radius, reduced, avoid.join()]);
+  }, [grid, packets, radius, reduced, avoid.join()]);
+
+  useEffect(() => {
+    colors.current = c;
+    repaint.current();
+  }, [c]);
 
   return <canvas ref={ref} className="circuit" aria-hidden="true" />;
 }

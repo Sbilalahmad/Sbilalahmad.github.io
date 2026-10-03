@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 export type Theme = "light" | "dark";
 
@@ -13,7 +13,10 @@ export function useThemeState() {
   const [theme, setTheme] = useState<Theme>(
     () => (document.documentElement.dataset.theme as Theme) || "dark"
   );
-  useEffect(() => {
+  // Layout effect: runs before every component's useEffect, so children that
+  // re-read CSS variables on theme change (useCssVars) see the new values.
+  // A plain useEffect here ran after the children's, leaving them one toggle behind.
+  useLayoutEffect(() => {
     document.documentElement.dataset.theme = theme;
     try {
       localStorage.setItem("theme", theme);
