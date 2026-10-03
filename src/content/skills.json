@@ -1,0 +1,75 @@
+{
+  "groups": [
+    {
+      "title": "Machine Learning & Data",
+      "items": [
+        "PyTorch",
+        "TensorFlow",
+        "scikit-learn",
+        "NumPy",
+        "Pandas",
+        "Matplotlib",
+        "Statistical Data Analysis",
+        "Model Evaluation"
+      ]
+    },
+    {
+      "title": "Generative & Agentic AI",
+      "items": [
+        "Agentic AI Development",
+        "Salesforce Agentforce",
+        "Einstein AI",
+        "Prompt Engineering",
+        "RLHF",
+        "Dialogflow",
+        "FastAPI"
+      ]
+    },
+    {
+      "title": "Languages",
+      "items": [
+        "Python",
+        "C++",
+        "Java",
+        "Kotlin",
+        "Dart",
+        "SQL",
+        "MATLAB"
+      ]
+    },
+    {
+      "title": "Salesforce Platform",
+      "items": [
+        "Apex",
+        "Lightning Web Components",
+        "Aura",
+        "SOQL / SOSL",
+        "Flows",
+        "Security Model"
+      ]
+    },
+    {
+      "title": "Mobile & Backend",
+      "items": [
+        "Android (Kotlin)",
+        "Gradle",
+        "Apache Maven",
+        "MySQL",
+        "PostgreSQL",
+        "SQLite"
+      ]
+    },
+    {
+      "title": "Tools & Environment",
+      "items": [
+        "Linux (Arch · Ubuntu · Kali)",
+        "Bash",
+        "Git & GitHub",
+        "VS Code",
+        "Google Colab",
+        "Kaggle",
+        "Agile"
+      ]
+    }
+  ]
+}

@@ -1,30 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useInView, useReducedMotion } from "../hooks";
+import { aiTwin } from "../data";
 
 /*
- * "AI twin" chat. Answers are pre-written from my profile and streamed token
+ * "AI twin" chat. Answers are pre-written (editable in /admin) and streamed token
  * by token like an LLM response; the side panel visualises next-token
  * sampling (candidate probabilities are illustrative, not from a real model).
  */
 
-const QA: { q: string; a: string }[] = [
-  {
-    q: "What do you build?",
-    a: "I build AI-powered software end to end — from training and evaluating models in PyTorch and TensorFlow, to designing autonomous agents with Salesforce Agentforce, to shipping Android apps in Kotlin like an OCR text extractor. Lately I'm focused on agentic systems and RLHF.",
-  },
-  {
-    q: "Tell me about your agent work",
-    a: "During my internship at Infoglen I designed autonomous agents and smart workflows with Agentforce and Einstein, backed by Apex logic, Lightning Web Components and SOQL queries. I'm most interested in agents that plan, call tools and verify their output before acting.",
-  },
-  {
-    q: "Why hire a fresher like you?",
-    a: "I learn fast and I teach what I learn — I mentored peers as AI/ML Lead at AMU's Computer Science Society and led the tech team for AMUHACKS 4.0 with 200+ participants. Add a Mathematics degree, an MCA and hands-on Agentforce experience, and you get an engineer ready to contribute from day one.",
-  },
-  {
-    q: "What are you exploring now?",
-    a: "RLHF, ethical AI and multi-agent systems — aligning models with human feedback, keeping them safe and fair, and coordinating several agents on one task. I'm also keen on automation and cloud computing.",
-  },
-];
+// Q&A pairs are edited in the admin panel (src/content/ai_twin.json)
+const QA = aiTwin;
 
 const tokenize = (s: string) => s.match(/\s*\S+/g) ?? [];
 

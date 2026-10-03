@@ -315,6 +315,7 @@ p { margin: 0; }
 }
 a.p-link:hover { color: var(--text); border-color: var(--text); }
 .p-link.muted { font-size: var(--fs-xs); color: var(--muted); }
+.p-img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--r-md); border: 1px solid var(--border); background: var(--surface-2); }
 .project h3 { font-size: var(--fs-lg); }
 .project p { color: var(--muted); font-size: var(--fs-base); flex: 1; }
 .more { text-align: center; margin-top: 40px; }

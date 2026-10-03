@@ -1,0 +1,137 @@
+{
+  "items": [
+    {
+      "title": "Tfi Text Extractor",
+      "tag": "Featured · Computer Vision",
+      "desc": "Android app that extracts text from gallery images and live camera captures, turning photos of documents, notes and signs into editable, shareable text.",
+      "tech": [
+        "Kotlin",
+        "Android",
+        "OCR",
+        "Camera API"
+      ],
+      "cats": [
+        "ai",
+        "mobile"
+      ],
+      "url": "https://github.com/Sbilalahmad/Tfi_Text_Extractor",
+      "note": "",
+      "image": ""
+    },
+    {
+      "title": "Sight for Blinds",
+      "tag": "Featured · Assistive AI",
+      "desc": "Assistive technology project aimed at helping visually impaired users perceive the world around them — technology built with purpose.",
+      "tech": [
+        "C++",
+        "Assistive Tech",
+        "Accessibility"
+      ],
+      "cats": [
+        "ai"
+      ],
+      "url": "https://github.com/Sbilalahmad/Sight-for-Blinds",
+      "note": "",
+      "image": ""
+    },
+    {
+      "title": "AI/ML Mentorship",
+      "tag": "Education · ML",
+      "desc": "Teaching repository of Jupyter notebooks covering ML fundamentals, created while mentoring students as AI/ML Lead at the Computer Science Society.",
+      "tech": [
+        "Python",
+        "Jupyter",
+        "scikit-learn",
+        "Pandas"
+      ],
+      "cats": [
+        "ai"
+      ],
+      "url": "https://github.com/Sbilalahmad/AI_ML_mentorship",
+      "note": "",
+      "image": ""
+    },
+    {
+      "title": "Agentforce Workflows",
+      "tag": "Enterprise AI",
+      "desc": "Autonomous agents and predictive, AI-driven workflows on Salesforce built during my Infoglen internship, combining Agentforce, Einstein, Apex and LWC.",
+      "tech": [
+        "Agentforce",
+        "Einstein",
+        "Apex",
+        "LWC"
+      ],
+      "cats": [
+        "ai"
+      ],
+      "url": "",
+      "note": "Internship work",
+      "image": ""
+    },
+    {
+      "title": "AgentForge",
+      "tag": "Product Design · 20 screens",
+      "desc": "Desktop wireframe specification for an AI-agent building platform, designed in a dark \"Obsidian Forge\" theme with the Geist typeface.",
+      "tech": [
+        "Google Stitch",
+        "UI/UX",
+        "AI Agents"
+      ],
+      "cats": [
+        "design",
+        "ai"
+      ],
+      "url": "",
+      "note": "Private design project",
+      "image": ""
+    },
+    {
+      "title": "Zambyl Meeting Intelligence",
+      "tag": "Product Design · 10 screens",
+      "desc": "Desktop UI for a meeting-intelligence platform, with a custom light design system built on Geist, Inter and JetBrains Mono.",
+      "tech": [
+        "Google Stitch",
+        "Design System",
+        "GenAI UX"
+      ],
+      "cats": [
+        "design",
+        "ai"
+      ],
+      "url": "",
+      "note": "Private design project",
+      "image": ""
+    },
+    {
+      "title": "Login & Sign-up",
+      "tag": "Android",
+      "desc": "Facebook-style authentication flow for Android with login and sign-up screens.",
+      "tech": [
+        "Kotlin",
+        "Android",
+        "Auth UI"
+      ],
+      "cats": [
+        "mobile"
+      ],
+      "url": "https://github.com/Sbilalahmad/Login_and_Sign_up",
+      "note": "",
+      "image": ""
+    },
+    {
+      "title": "StopWatch",
+      "tag": "Android",
+      "desc": "Simple, clean Android stopwatch sample app with start, pause and reset controls.",
+      "tech": [
+        "Kotlin",
+        "Android"
+      ],
+      "cats": [
+        "mobile"
+      ],
+      "url": "https://github.com/Sbilalahmad/My_StropWatch",
+      "note": "",
+      "image": ""
+    }
+  ]
+}

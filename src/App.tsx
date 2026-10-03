@@ -27,6 +27,17 @@ import * as I from "./components/Icons";
 // three.js is the heaviest dependency; load it after first paint
 const NeuralBrain = lazy(() => import("./components/NeuralBrain"));
 
+/** Renders **bold** markup from the CMS as <strong>. */
+function Rich({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+        part.startsWith("**") && part.endsWith("**") ? <strong key={i}>{part.slice(2, -2)}</strong> : part
+      )}
+    </>
+  );
+}
+
 const NAV = [
   ["about", "About"],
   ["skills", "Skills"],
@@ -158,9 +169,11 @@ function Hero() {
       <Circuit avoid={AVOID} />
       <div className="container hero-inner">
         <div className="hero-copy">
-          <p className="eyebrow mono">
-            <span className="pulse" /> Open to AI/ML engineering roles
-          </p>
+          {profile.openToWork && (
+            <p className="eyebrow mono">
+              <span className="pulse" /> Open to AI/ML engineering roles
+            </p>
+          )}
           <h1>
             Hi, I'm <DecryptedText text={profile.name} className="name-accent" />
           </h1>
@@ -169,9 +182,7 @@ function Hero() {
             <span className="caret">_</span>
           </p>
           <p className="lead">
-            MCA graduate from Aligarh Muslim University building <strong>agentic AI</strong>,{" "}
-            <strong>machine learning</strong> systems and <strong>intelligent mobile apps</strong>. I care about RLHF,
-            ethical AI and technology that solves real problems.
+            <Rich text={profile.heroLead} />
           </p>
           <div className="cta">
             <a href="#projects" className="btn btn-primary">
@@ -240,31 +251,18 @@ function About() {
         />
         <div className="about-grid">
           <Reveal className="about-text">
-            <p>
-              I'm an AI/ML engineer and a Master of Computer Applications graduate from{" "}
-              <strong>Aligarh Muslim University</strong>, with an undergraduate foundation in <strong>Mathematics</strong>.
-              I build at the intersection of machine learning, generative AI and software — from training models in
-              PyTorch and TensorFlow to designing autonomous agents with Salesforce Agentforce and shipping Android apps
-              in Kotlin.
-            </p>
-            <p>
-              Most recently I interned as a <strong>Salesforce &amp; AI Developer at Infoglen</strong>, integrating
-              Agentforce and Einstein capabilities into enterprise workflows. Before that, I led the AI/ML track at the
-              Computer Science Society, mentoring peers through data preprocessing, model development and evaluation,
-              and teaching school students prompt engineering and real-world AI.
-            </p>
-            <p>
-              Linux is my home environment for scripting and automation, and MATLAB has sharpened my numerical
-              analysis. I'm currently exploring <strong>RLHF</strong>, <strong>ethical AI</strong> and{" "}
-              <strong>agentic systems</strong> — and I'm looking for a team where I can turn that curiosity into impact.
-            </p>
+            {profile.about.map((para, i) => (
+              <p key={i}>
+                <Rich text={para} />
+              </p>
+            ))}
           </Reveal>
           <Reveal as="aside" className="about-card" delay={100}>
             <div className="about-id">
               <img src={profile.avatar} alt={`Portrait of ${profile.name}`} width={64} height={64} className="avatar" />
               <div>
                 <strong>{profile.name}</strong>
-                <span className="mono">@Sbilalahmad</span>
+                <span className="mono">@{profile.githubHandle}</span>
               </div>
             </div>
             <h3 className="mono">quick_facts.json</h3>
@@ -277,7 +275,7 @@ function About() {
               ))}
               <div>
                 <dt>status</dt>
-                <dd className="ok">available_for_hire = true</dd>
+                <dd className="ok">available_for_hire = {String(profile.openToWork)}</dd>
               </div>
             </dl>
           </Reveal>
@@ -470,6 +468,7 @@ function Projects() {
                   </span>
                 )}
               </div>
+              {p.image && <img src={p.image} alt="" className="p-img" loading="lazy" />}
               <h3>{p.title}</h3>
               <p>{p.desc}</p>
               <ul className="chips sm">
@@ -482,7 +481,7 @@ function Projects() {
         </div>
         <Reveal className="more">
           <a href={`${socials.github}?tab=repositories`} target="_blank" rel="noopener" className="btn btn-ghost">
-            See all 25 repositories on GitHub ↗
+            See all repositories on GitHub ↗
           </a>
         </Reveal>
       </div>
@@ -591,7 +590,7 @@ function Contact() {
               </a>
               <a className="ci" href={socials.github} target="_blank" rel="noopener">
                 <span className="ci-k mono">github</span>
-                <span className="ci-v">@Sbilalahmad</span>
+                <span className="ci-v">@{profile.githubHandle}</span>
               </a>
             </div>
           </Reveal>

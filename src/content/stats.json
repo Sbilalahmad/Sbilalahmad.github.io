@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "value": 25,
+      "suffix": "",
+      "label": "Public repos"
+    },
+    {
+      "value": 200,
+      "suffix": "+",
+      "label": "Hackers supported at AMUHACKS 4.0"
+    },
+    {
+      "value": 6,
+      "suffix": "",
+      "label": "Leadership & industry roles"
+    },
+    {
+      "value": 5,
+      "suffix": "",
+      "label": "Certifications"
+    }
+  ]
+}

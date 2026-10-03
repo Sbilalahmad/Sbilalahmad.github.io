@@ -1,0 +1,50 @@
+{
+  "name": "Syed Bilal Ahmad",
+  "email": "syedbilalahmad397@gmail.com",
+  "location": "Aligarh, Uttar Pradesh, India",
+  "avatar": "https://avatars.githubusercontent.com/u/181249646?v=4",
+  "github_handle": "Sbilalahmad",
+  "open_to_work": true,
+  "roles": [
+    "AI/ML Engineer",
+    "Agentic AI Developer",
+    "Neural Network Tinkerer",
+    "GenAI Enthusiast",
+    "Android Developer"
+  ],
+  "hero_lead": "MCA graduate from Aligarh Muslim University building **agentic AI**, **machine learning** systems and **intelligent mobile apps**. I care about RLHF, ethical AI and technology that solves real problems.",
+  "about": [
+    "I'm an AI/ML engineer and a Master of Computer Applications graduate from **Aligarh Muslim University**, with an undergraduate foundation in **Mathematics**. I build at the intersection of machine learning, generative AI and software — from training models in PyTorch and TensorFlow to designing autonomous agents with Salesforce Agentforce and shipping Android apps in Kotlin.",
+    "Most recently I interned as a **Salesforce & AI Developer at Infoglen**, integrating Agentforce and Einstein capabilities into enterprise workflows. Before that, I led the AI/ML track at the Computer Science Society, mentoring peers through data preprocessing, model development and evaluation, and teaching school students prompt engineering and real-world AI.",
+    "Linux is my home environment for scripting and automation, and MATLAB has sharpened my numerical analysis. I'm currently exploring **RLHF**, **ethical AI** and **agentic systems** — and I'm looking for a team where I can turn that curiosity into impact."
+  ],
+  "quick_facts": [
+    {
+      "key": "role",
+      "value": "AI/ML Engineer (Fresher)"
+    },
+    {
+      "key": "education",
+      "value": "MCA, Aligarh Muslim University '26"
+    },
+    {
+      "key": "location",
+      "value": "Aligarh, Uttar Pradesh, India"
+    },
+    {
+      "key": "focus",
+      "value": "GenAI · Agentic AI · ML · Android"
+    },
+    {
+      "key": "interests",
+      "value": "RLHF · Ethical AI · Automation · Cloud"
+    }
+  ],
+  "socials": {
+    "github": "https://github.com/Sbilalahmad",
+    "linkedin": "https://www.linkedin.com/in/syed-bilal-ahmad-454468203",
+    "medium": "https://medium.com/@syedbilalahmad397",
+    "stackoverflow": "https://stackoverflow.com/users/29562515/syed-bilal-ahmad",
+    "orcid": "https://orcid.org/0009-0005-1574-3231"
+  }
+}

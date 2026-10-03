@@ -1,0 +1,182 @@
+# Admin panel configuration (Sveltia CMS).
+# Every save commits to the repo; the GitHub Actions workflow then rebuilds the
+# site, so changes go live in about a minute.
+
+backend:
+  name: github
+  repo: Sbilalahmad/Sbilalahmad.github.io
+  branch: main
+  commit_messages:
+    update: "Update {{collection}} “{{slug}}” via admin"
+    uploadMedia: "Upload “{{path}}” via admin"
+
+site_url: https://sbilalahmad.github.io
+display_url: https://sbilalahmad.github.io
+
+# Uploaded images go to public/uploads and are served at /uploads
+media_folder: public/uploads
+public_folder: /uploads
+
+collections:
+  - name: site
+    label: Site content
+    editor: { preview: false }
+    files:
+      # ---------------- Profile / hero / about ----------------
+      - name: profile
+        label: Profile, hero & about
+        file: src/content/profile.json
+        fields:
+          - { name: name, label: Full name, widget: string }
+          - { name: email, label: Contact email, widget: string }
+          - { name: location, label: Location, widget: string }
+          - { name: avatar, label: Profile photo, widget: image, hint: "Upload a photo or paste an image URL" }
+          - { name: github_handle, label: GitHub username, widget: string }
+          - { name: open_to_work, label: Show "Open to AI/ML roles" badge, widget: boolean, default: true }
+          - name: roles
+            label: Rotating hero titles
+            widget: list
+            field: { name: role, label: Title, widget: string }
+          - { name: hero_lead, label: Hero intro, widget: text, hint: "Wrap words in **double asterisks** to make them bold" }
+          - name: about
+            label: About paragraphs
+            widget: list
+            hint: "Wrap words in **double asterisks** to make them bold"
+            field: { name: paragraph, label: Paragraph, widget: text }
+          - name: quick_facts
+            label: Quick facts card
+            widget: list
+            summary: "{{key}}: {{value}}"
+            fields:
+              - { name: key, label: Label, widget: string }
+              - { name: value, label: Value, widget: string }
+          - name: socials
+            label: Social links
+            widget: object
+            fields:
+              - { name: github, label: GitHub URL, widget: string }
+              - { name: linkedin, label: LinkedIn URL, widget: string }
+              - { name: medium, label: Medium URL, widget: string }
+              - { name: stackoverflow, label: Stack Overflow URL, widget: string }
+              - { name: orcid, label: ORCID URL, widget: string }
+
+      # ---------------- Projects ----------------
+      - name: projects
+        label: Projects
+        file: src/content/projects.json
+        fields:
+          - name: items
+            label: Projects
+            label_singular: Project
+            widget: list
+            summary: "{{title}} — {{tag}}"
+            hint: "Drag to reorder. The first projects appear first on the site."
+            fields:
+              - { name: title, label: Title, widget: string }
+              - { name: tag, label: Tag line, widget: string, hint: "e.g. Featured · Computer Vision" }
+              - { name: desc, label: Description, widget: text }
+              - { name: image, label: Screenshot / cover image, widget: image, required: false }
+              - name: tech
+                label: Tech stack
+                widget: list
+                field: { name: item, label: Technology, widget: string }
+              - name: cats
+                label: Filter categories
+                widget: select
+                multiple: true
+                options:
+                  - { label: "AI / ML", value: ai }
+                  - { label: Mobile, value: mobile }
+                  - { label: Product Design, value: design }
+              - { name: url, label: Link (GitHub / demo), widget: string, required: false }
+              - { name: note, label: Note when there is no link, widget: string, required: false, hint: "e.g. Private design project" }
+
+      # ---------------- Experience ----------------
+      - name: experience
+        label: Experience
+        file: src/content/experience.json
+        fields:
+          - name: items
+            label: Roles
+            label_singular: Role
+            widget: list
+            summary: "{{role}} — {{date}}"
+            hint: "Newest first. Drag to reorder."
+            fields:
+              - { name: role, label: Role / title, widget: string }
+              - { name: org, label: Organisation · location, widget: string }
+              - { name: date, label: Dates, widget: string, hint: "e.g. Jan 2026 – Apr 2026" }
+              - name: points
+                label: Bullet points
+                widget: list
+                field: { name: point, label: Point, widget: text }
+              - name: tags
+                label: Tags
+                widget: list
+                required: false
+                field: { name: tag, label: Tag, widget: string }
+
+      # ---------------- Skills ----------------
+      - name: skills
+        label: Skills
+        file: src/content/skills.json
+        fields:
+          - name: groups
+            label: Skill groups
+            label_singular: Group
+            widget: list
+            summary: "{{title}}"
+            fields:
+              - { name: title, label: Group title, widget: string }
+              - name: items
+                label: Skills
+                widget: list
+                field: { name: skill, label: Skill, widget: string }
+
+      # ---------------- Stats ----------------
+      - name: stats
+        label: Highlight numbers
+        file: src/content/stats.json
+        fields:
+          - name: items
+            label: Numbers
+            label_singular: Number
+            widget: list
+            summary: "{{value}}{{suffix}} {{label}}"
+            fields:
+              - { name: value, label: Number, widget: number, value_type: int }
+              - { name: suffix, label: Suffix, widget: string, required: false, hint: "e.g. +" }
+              - { name: label, label: Label, widget: string }
+
+      # ---------------- Education ----------------
+      - name: education
+        label: Education & certifications
+        file: src/content/education.json
+        fields:
+          - name: degrees
+            label: Degrees
+            label_singular: Degree
+            widget: list
+            summary: "{{degree}} ({{years}})"
+            fields:
+              - { name: years, label: Years, widget: string }
+              - { name: degree, label: Degree, widget: string }
+              - { name: school, label: Institution, widget: string }
+          - name: certifications
+            label: Certifications
+            widget: list
+            field: { name: cert, label: Certification, widget: string }
+
+      # ---------------- AI twin ----------------
+      - name: ai_twin
+        label: AI twin chat
+        file: src/content/ai_twin.json
+        fields:
+          - name: qa
+            label: Questions & answers
+            label_singular: Question
+            widget: list
+            summary: "{{q}}"
+            fields:
+              - { name: q, label: Question, widget: string }
+              - { name: a, label: Answer, widget: text }

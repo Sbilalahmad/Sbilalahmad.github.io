@@ -1,0 +1,74 @@
+{
+  "items": [
+    {
+      "role": "Salesforce & AI Developer Intern",
+      "org": "Infoglen · Gurugram",
+      "date": "Jun 2026",
+      "points": [
+        "Designed autonomous agents, smart workflows and predictive solutions with Salesforce Agentforce and Einstein features.",
+        "Built custom business logic in Apex (triggers, classes, async processing) and responsive UIs with Lightning Web Components.",
+        "Wrote efficient SOQL/SOSL queries to manage and optimize complex data models.",
+        "Collaborated with developers, architects and BAs in an agile team to ship scalable digital transformations."
+      ],
+      "tags": [
+        "Agentforce",
+        "Apex",
+        "LWC",
+        "SOQL",
+        "Agile"
+      ]
+    },
+    {
+      "role": "Salesforce Development & Admin Trainee",
+      "org": "Infoglen · Aligarh",
+      "date": "Jan 2026 – Apr 2026",
+      "points": [
+        "Hands-on training across Apex, Triggers, Flows, LWC, Aura, SOQL, DML and Lightning App Builder.",
+        "Covered the Salesforce security model, deployment strategies, SDLC and Salesforce AI fundamentals."
+      ],
+      "tags": []
+    },
+    {
+      "role": "AI/ML Lead (Mentor)",
+      "org": "Computer Science Society, AMU · Aligarh",
+      "date": "Sep 2025 – Jan 2026",
+      "points": [
+        "Mentored peers on data preprocessing, model development, evaluation and practical ML implementation.",
+        "Organized workshops, technical sessions and hands-on training bridging theory and real-world application.",
+        "Guided student projects and encouraged participation in hackathons and coding competitions."
+      ],
+      "tags": []
+    },
+    {
+      "role": "Students Coordinator (HR Team)",
+      "org": "Training & Placement Cell, Dept. of Computer Science, AMU",
+      "date": "Aug 2025 – Jun 2026",
+      "points": [
+        "Coordinated campus placements and supported training initiatives for students.",
+        "Strengthened industry–academia relations by working with recruiters and alumni."
+      ],
+      "tags": []
+    },
+    {
+      "role": "Mentor — AI & ChatGPT Certificate Course",
+      "org": "Image Classes · Aligarh",
+      "date": "May 2025 – Oct 2025",
+      "points": [
+        "Taught school students AI fundamentals, prompt engineering and real-world AI use cases.",
+        "Guided mini-projects so learners could apply concepts hands-on."
+      ],
+      "tags": []
+    },
+    {
+      "role": "AI/ML Intern & Tech Team Lead",
+      "org": "Computer Science Society, AMU · Aligarh",
+      "date": "Jan 2025 – May 2025",
+      "points": [
+        "Led technical infrastructure for AMUHACKS 4.0, the society's flagship hackathon with 200+ participants.",
+        "Configured Google Workspace (Gmail, Drive, Forms, Calendar) to automate registrations and communications.",
+        "Led a cross-functional tech team, resolving access management and live issues for a glitch-free event."
+      ],
+      "tags": []
+    }
+  ]
+}
