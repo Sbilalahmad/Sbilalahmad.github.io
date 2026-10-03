@@ -8,8 +8,17 @@ import { useCssVars, useReducedMotion } from "../hooks";
  * only redraws the packets and the hover highlight. Flat colours only.
  */
 
-type Trace = { pts: number[]; segs: { x1: number; y1: number; x2: number; y2: number; mx: number; my: number; len: number }[]; len: number };
+type Trace = {
+  pts: number[];
+  segs: { x1: number; y1: number; x2: number; y2: number; mx: number; my: number; len: number }[];
+  len: number;
+  /** starts at a chip pin (no solder pad at that end) */
+  fromChip: boolean;
+  /** indices into pts of bends drawn as vias */
+  vias: number[];
+};
 type Packet = { t: Trace; d: number; speed: number; dir: 1 | -1 };
+type Chip = { x: number; y: number; w: number; h: number; pins: { x: number; y: number; dx: number; dy: number }[] };
 
 const DIRS: [number, number][] = [
   [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1],
@@ -17,41 +26,43 @@ const DIRS: [number, number][] = [
 
 type Rect = { x: number; y: number; w: number; h: number };
 
-function buildTraces(w: number, h: number, G: number, avoid: Rect[]): Trace[] {
+function buildBoard(w: number, h: number, G: number, avoid: Rect[]): { traces: Trace[]; chips: Chip[] } {
   const cols = Math.ceil(w / G), rows = Math.ceil(h / G);
   const used = new Set<number>();
   const key = (c: number, r: number) => r * cols + c;
+  const free = (c: number, r: number) => c >= 0 && r >= 0 && c < cols && r < rows && !used.has(key(c, r));
   const traces: Trace[] = [];
-  const target = Math.floor((cols * rows) / 22);
+  const chips: Chip[] = [];
+
   // Keep the board clear behind content so text stays readable
   for (const a of avoid)
     for (let r = Math.floor(a.y / G); r <= Math.floor((a.y + a.h) / G); r++)
       for (let c = Math.floor(a.x / G); c <= Math.floor((a.x + a.w) / G); c++) used.add(key(c, r));
 
-  for (let attempt = 0; attempt < target * 6 && traces.length < target; attempt++) {
-    let c = Math.floor(Math.random() * cols), r = Math.floor(Math.random() * rows);
-    if (used.has(key(c, r))) continue;
-    let di = Math.floor(Math.random() * 4) * 2; // start orthogonal
+  /** Grows a trace from (c, r) heading `di`; `start` is an extra leading point (chip pin). */
+  const grow = (c: number, r: number, di: number, maxLen: number, start?: [number, number]) => {
+    if (!free(c, r)) return;
     const cells: [number, number][] = [[c, r]];
     used.add(key(c, r));
-    const maxLen = 5 + Math.floor(Math.random() * 12);
     for (let s = 0; s < maxLen; s++) {
       if (s > 1 && Math.random() < 0.28) di = (di + (Math.random() < 0.5 ? 1 : 7)) % 8; // ±45° bend
       const nc = c + DIRS[di][0], nr = r + DIRS[di][1];
-      if (nc < 0 || nr < 0 || nc >= cols || nr >= rows || used.has(key(nc, nr))) break;
+      if (!free(nc, nr)) break;
       c = nc; r = nr;
       used.add(key(c, r));
       cells.push([c, r]);
     }
-    if (cells.length < 3) continue;
+    if (cells.length < (start ? 2 : 3)) return;
 
-    // Merge collinear cells into straight segments
-    const pts: number[] = [];
+    // Merge collinear cells into straight segments; remember bends for vias
+    const pts: number[] = start ? [...start] : [];
+    const vias: number[] = [];
     cells.forEach(([cc, rr], i) => {
       const x = (cc + 0.5) * G, y = (rr + 0.5) * G;
       if (i > 0 && i < cells.length - 1) {
         const [pc, pr] = cells[i - 1], [qc, qr] = cells[i + 1];
         if (cc - pc === qc - cc && rr - pr === qr - rr) return;
+        if (Math.random() < 0.35) vias.push(pts.length);
       }
       pts.push(x, y);
     });
@@ -63,9 +74,42 @@ function buildTraces(w: number, h: number, G: number, avoid: Rect[]): Trace[] {
       segs.push({ x1, y1, x2, y2, mx: (x1 + x2) / 2, my: (y1 + y2) / 2, len: l });
       len += l;
     }
-    traces.push({ pts, segs, len });
+    traces.push({ pts, segs, len, fromChip: !!start, vias });
+  };
+
+  // 1. Chips (IC packages) in open areas, with traces fanning out from their pins
+  const chipTarget = Math.max(2, Math.min(7, Math.round((cols * rows) / 160)));
+  for (let attempt = 0; attempt < 200 && chips.length < chipTarget; attempt++) {
+    const cw = 3 + Math.floor(Math.random() * 3), ch = 2 + Math.floor(Math.random() * 2);
+    const c0 = 1 + Math.floor(Math.random() * (cols - cw - 2)), r0 = 1 + Math.floor(Math.random() * (rows - ch - 2));
+    let ok = true;
+    for (let r = r0 - 1; r <= r0 + ch && ok; r++) for (let c = c0 - 1; c <= c0 + cw && ok; c++) ok = free(c, r);
+    if (!ok) continue;
+    for (let r = r0; r < r0 + ch; r++) for (let c = c0; c < c0 + cw; c++) used.add(key(c, r));
+    const chip: Chip = { x: c0 * G + 4, y: r0 * G + 4, w: cw * G - 8, h: ch * G - 8, pins: [] };
+    chips.push(chip);
+    for (let c = c0; c < c0 + cw; c++) {
+      const x = (c + 0.5) * G;
+      chip.pins.push({ x, y: chip.y, dx: 0, dy: -1 }, { x, y: chip.y + chip.h, dx: 0, dy: 1 });
+    }
+    for (let r = r0; r < r0 + ch; r++) {
+      const y = (r + 0.5) * G;
+      chip.pins.push({ x: chip.x, y, dx: -1, dy: 0 }, { x: chip.x + chip.w, y, dx: 1, dy: 0 });
+    }
+    for (const pin of chip.pins) {
+      if (Math.random() < 0.3) continue;
+      const di = DIRS.findIndex(([dx, dy]) => dx === pin.dx && dy === pin.dy);
+      const pc = Math.floor(pin.x / G) + pin.dx, pr = Math.floor(pin.y / G) + (pin.dy > 0 ? 1 : pin.dy < 0 ? -1 : 0);
+      grow(pc, pr, di, 4 + Math.floor(Math.random() * 10), [pin.x + pin.dx * 5, pin.y + pin.dy * 5]);
+    }
   }
-  return traces;
+
+  // 2. Free-running traces fill the rest
+  const target = traces.length + Math.floor((cols * rows) / 13);
+  for (let attempt = 0; attempt < target * 6 && traces.length < target; attempt++) {
+    grow(Math.floor(Math.random() * cols), Math.floor(Math.random() * rows), Math.floor(Math.random() * 4) * 2, 5 + Math.floor(Math.random() * 12));
+  }
+  return { traces, chips };
 }
 
 function pointAt(t: Trace, d: number): [number, number] {
@@ -82,15 +126,15 @@ function pointAt(t: Trace, d: number): [number, number] {
 }
 
 export default function Circuit({
-  grid = 30,
-  packets = 14,
+  grid = 28,
+  packets = 24,
   radius = 150,
   avoid = [],
 }: {
   grid?: number;
   packets?: number;
   radius?: number;
-  /** selectors (within the parent section) to keep traces away from */
+  /** selectors of elements (measured at load) to keep traces away from */
   avoid?: string[];
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -108,6 +152,7 @@ export default function Circuit({
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     let w = 0, h = 0, raf = 0, visible = true, last = performance.now();
     let traces: Trace[] = [];
+    let chips: Chip[] = [];
     let live: Packet[] = [];
     const mouse = { x: -1e4, y: -1e4 };
 
@@ -122,15 +167,46 @@ export default function Circuit({
         for (let i = 0; i < t.pts.length; i += 2) (i ? lctx.lineTo : lctx.moveTo).call(lctx, t.pts[i], t.pts[i + 1]);
         lctx.stroke();
       }
-      // Solder pads at both ends
+      // Solder pads at free ends; small filled vias at some bends
       lctx.fillStyle = colors.current["--bg"];
       for (const t of traces) {
-        for (const i of [0, t.pts.length - 2]) {
+        for (const i of t.fromChip ? [t.pts.length - 2] : [0, t.pts.length - 2]) {
           lctx.beginPath();
           lctx.arc(t.pts[i], t.pts[i + 1], 3.2, 0, Math.PI * 2);
           lctx.fill();
           lctx.stroke();
         }
+      }
+      lctx.fillStyle = colors.current["--border"];
+      for (const t of traces)
+        for (const i of t.vias) {
+          lctx.beginPath();
+          lctx.arc(t.pts[i], t.pts[i + 1], 2.2, 0, Math.PI * 2);
+          lctx.fill();
+        }
+
+      // Chips: package body, pin stubs, orientation notch, die outline
+      for (const chip of chips) {
+        lctx.strokeStyle = colors.current["--border"];
+        lctx.lineWidth = 1.2;
+        lctx.beginPath();
+        for (const p of chip.pins) {
+          lctx.moveTo(p.x, p.y);
+          lctx.lineTo(p.x + p.dx * 5, p.y + p.dy * 5);
+        }
+        lctx.stroke();
+        lctx.fillStyle = colors.current["--bg"];
+        lctx.beginPath();
+        lctx.roundRect(chip.x, chip.y, chip.w, chip.h, 3);
+        lctx.fill();
+        lctx.stroke();
+        lctx.setLineDash([3, 3]);
+        lctx.strokeRect(chip.x + 8, chip.y + 8, chip.w - 16, chip.h - 16);
+        lctx.setLineDash([]);
+        lctx.fillStyle = colors.current["--border"];
+        lctx.beginPath();
+        lctx.arc(chip.x + 6, chip.y + 6, 2, 0, Math.PI * 2);
+        lctx.fill();
       }
     };
 
@@ -144,12 +220,12 @@ export default function Circuit({
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       const box = canvas.getBoundingClientRect();
       const rects = avoid.flatMap((sel) =>
-        [...(canvas.parentElement?.querySelectorAll(sel) ?? [])].map((el) => {
+        [...document.querySelectorAll(sel)].map((el) => {
           const r = el.getBoundingClientRect();
           return { x: r.left - box.left - 12, y: r.top - box.top - 12, w: r.width + 24, h: r.height + 24 };
         })
       );
-      traces = buildTraces(w, h, grid, rects);
+      ({ traces, chips } = buildBoard(w, h, grid, rects));
       live = [];
       drawStatic();
     };

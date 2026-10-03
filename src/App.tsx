@@ -161,7 +161,7 @@ function SocialLinks() {
   );
 }
 
-const AVOID = [".hero-copy > *", ".brain"];
+const AVOID = [".hero-copy > *", ".brain", ".nav .logo", ".nav-links", ".nav-actions", ".scroll-hint"];
 
 function Hero() {
   return (
