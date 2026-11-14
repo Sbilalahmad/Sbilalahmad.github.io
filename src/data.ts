@@ -21,7 +21,11 @@ export const profile = {
   roles: profileJson.roles,
   heroLead: profileJson.hero_lead,
   about: profileJson.about,
-  chatbotSheetUrl: ((profileJson as { chatbot_sheet_url?: string }).chatbot_sheet_url ?? "").trim(),
+  // Only a real https URL counts; anything else (empty, a placeholder) makes the
+  // chat robot fall back to the visitor's email app instead of losing messages.
+  chatbotSheetUrl: /^https:\/\/\S+$/.test((profileJson as { chatbot_sheet_url?: string }).chatbot_sheet_url?.trim() ?? "")
+    ? (profileJson as { chatbot_sheet_url: string }).chatbot_sheet_url.trim()
+    : "",
 };
 
 export const socials = profileJson.socials;
