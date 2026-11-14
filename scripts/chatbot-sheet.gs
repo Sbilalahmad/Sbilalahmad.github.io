@@ -6,7 +6,12 @@
  */
 
 // Set to "" to turn off the email alert for each new message.
-const NOTIFY_EMAIL = Session.getActiveUser().getEmail();
+const NOTIFY_EMAIL = Session.getEffectiveUser().getEmail();
+
+// Opening the /exec URL in a browser should show this text: confirms the deployment works.
+function doGet() {
+  return ContentService.createTextOutput("Portfolio chat endpoint is running.");
+}
 
 function doPost(e) {
   const lock = LockService.getScriptLock();
