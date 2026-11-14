@@ -22,6 +22,7 @@ import AgentSystem from "./components/AgentSystem";
 import GenAIChat from "./components/GenAIChat";
 import Marquee from "./components/Marquee";
 import RagPipelines from "./components/RagPipelines";
+import RoboChat from "./components/RoboChat";
 import * as I from "./components/Icons";
 
 // three.js is the heaviest dependency; load it after first paint
@@ -632,6 +633,7 @@ export default function App() {
           </a>
         </div>
       </footer>
+      <RoboChat />
     </ThemeContext.Provider>
   );
 }

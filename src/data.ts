@@ -21,6 +21,7 @@ export const profile = {
   roles: profileJson.roles,
   heroLead: profileJson.hero_lead,
   about: profileJson.about,
+  chatbotSheetUrl: ((profileJson as { chatbot_sheet_url?: string }).chatbot_sheet_url ?? "").trim(),
 };
 
 export const socials = profileJson.socials;

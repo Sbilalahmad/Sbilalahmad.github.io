@@ -29,6 +29,7 @@ collections:
         fields:
           - { name: name, label: Full name, widget: string }
           - { name: email, label: Contact email, widget: string }
+          - { name: chatbot_sheet_url, label: Chat robot Google Sheet URL, widget: string, required: false, hint: "Apps Script web app URL ending in /exec (setup steps at the top of scripts/chatbot-sheet.gs). Leave empty to make the robot open the visitor's email app instead." }
           - { name: location, label: Location, widget: string }
           - { name: avatar, label: Profile photo, widget: image, hint: "Upload a photo or paste an image URL" }
           - { name: github_handle, label: GitHub username, widget: string }

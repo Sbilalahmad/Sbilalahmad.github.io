@@ -680,3 +680,77 @@ circle.neuron[style] { cursor: default; }
   .rag-controls .btn { flex: 1; justify-content: center; padding-inline: 10px; }
   .rag-steps { grid-template-columns: 1fr 1fr; }
 }
+
+/* ============ Walking robot chat ============ */
+/* Motion is driven per frame by WalkingRobot.tsx; CSS only sets looks. */
+.robo-walker { position: fixed; right: 16px; bottom: 12px; z-index: 90; will-change: transform; }
+.robo-btn {
+  display: block; padding: 0; border: 0; background: none; cursor: pointer;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  -webkit-tap-highlight-color: transparent;
+}
+.robo-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: var(--r-md); }
+.robo-svg { width: 64px; height: 80px; display: block; overflow: visible; }
+.robo-svg, .robo-head-icon {
+  --robo-fill: var(--surface-2);
+  --robo-edge: color-mix(in srgb, var(--text) 38%, transparent);
+}
+.r-body { fill: var(--robo-fill); stroke: var(--robo-edge); stroke-width: 1.5; }
+.r-belt { fill: color-mix(in srgb, var(--robo-fill) 70%, var(--text) 12%); stroke: var(--robo-edge); stroke-width: 1; }
+.r-visor { fill: var(--bg); stroke: var(--robo-edge); stroke-width: 1; }
+.r-eye, .r-accent { fill: var(--accent); }
+.r-foot { fill: var(--accent-strong); stroke: var(--robo-edge); stroke-width: 1; }
+.r-hand { fill: var(--robo-fill); stroke: var(--robo-edge); stroke-width: 1.3; }
+.r-joint { fill: color-mix(in srgb, var(--robo-fill) 60%, var(--accent) 40%); stroke: var(--robo-edge); stroke-width: 1; }
+.r-limb-o, .r-limb, .r-ant-o, .r-ant { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.r-limb-o { stroke: var(--robo-edge); stroke-width: 7.5; }
+.r-limb { stroke: var(--robo-fill); stroke-width: 4.5; }
+.r-ant-o { stroke: var(--robo-edge); stroke-width: 3.2; }
+.r-ant { stroke: var(--robo-fill); stroke-width: 1.4; }
+.r-back { filter: brightness(0.72); }
+:root[data-theme="light"] .r-back { filter: brightness(0.9); }
+.r-shadow { fill: #000; opacity: 0.35; }
+/* Static header icon */
+.robo-head-icon .r-leg, .robo-head-icon .r-arm { transform: none; }
+.robo-head-icon .r-line { stroke: var(--muted); stroke-width: 2; stroke-linecap: round; }
+
+.robo-bubble {
+  position: absolute; bottom: calc(100% + 6px); right: 0; white-space: nowrap;
+  background: var(--surface); color: var(--text); border: 1px solid var(--accent);
+  padding: 6px 12px; border-radius: var(--r-full); font-size: var(--fs-sm);
+  box-shadow: var(--shadow); pointer-events: none;
+  animation: robo-pop 0.3s ease-out;
+}
+@keyframes robo-pop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.robo-panel {
+  position: fixed; right: 16px; bottom: 96px; z-index: 95;
+  width: min(370px, calc(100vw - 32px)); height: min(540px, calc(100dvh - 120px));
+  display: flex; flex-direction: column;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35); overflow: hidden;
+  animation: robo-pop 0.2s ease-out;
+}
+.robo-head { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--border); background: var(--bg-alt); }
+.robo-head-icon { width: 30px; height: 38px; flex: none; }
+.robo-head strong { display: block; font-size: var(--fs-sm); }
+.robo-head span { font-size: var(--fs-xs); color: var(--muted); }
+.robo-x { margin-left: auto; width: 32px; height: 32px; border: 0; border-radius: var(--r-sm); background: none; color: var(--muted); font-size: 22px; line-height: 1; cursor: pointer; }
+.robo-x:hover { color: var(--text); background: var(--surface-2); }
+.robo-log { flex: 1; overflow-y: auto; display: grid; align-content: start; gap: 10px; padding: 14px; }
+.robo-log .msg { font-size: var(--fs-sm); }
+.robo-chips { display: flex; gap: 6px; overflow-x: auto; padding: 8px 12px; border-top: 1px solid var(--border); scrollbar-width: thin; }
+.robo-chips .chip-btn { flex: none; font-size: var(--fs-xs); }
+.robo-input { display: flex; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--border); }
+.robo-input input {
+  flex: 1; min-width: 0; padding: 9px 12px; font: inherit; font-size: var(--fs-sm);
+  color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md);
+}
+.robo-input input:focus { outline: none; border-color: var(--accent); }
+.robo-input .btn { padding: 8px 14px; font-size: var(--fs-sm); }
+.robo-input .btn:disabled { opacity: 0.5; cursor: default; }
+.robo-err { margin: 0; padding: 0 12px 10px; font-size: var(--fs-xs); color: #e5484d; }
+@media (max-width: 600px) {
+  .robo-svg { width: 52px; height: 65px; }
+  .robo-panel { bottom: 84px; }
+}
